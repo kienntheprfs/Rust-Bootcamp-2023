@@ -3,8 +3,8 @@
 fn exercise1() {
     // Use as many approaches as you can to make it work
     let x = String::from("hello, world");
-    let y = x;
-    let z = x;
+    let y = &x;
+    let z = &x;
 }
 
 // Exercise 2
@@ -17,8 +17,9 @@ fn exercise2() {
     println!("{}", s2);
 }
 // Only modify the code below!
-fn take_ownership(s: String) {
+fn take_ownership(s: String)->String {
     println!("{}", s);
+    s
 }
 
 // Exercise 3
