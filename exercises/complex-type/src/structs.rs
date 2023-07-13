@@ -2,6 +2,13 @@
 // Fix the error
 // Make it compile
 // Run test
+
+impl  PartialEq for Person {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name && self.age == other.age && self.hobby == other.hobby
+    }
+}
+#[derive(Debug)]
 struct Person {
     name: String,
     age: u8,
@@ -25,6 +32,7 @@ fn exercise1() -> Person {
 // Run test
 
 // Define the struct
+#[allow(dead_code)]
 struct Agent  {
     name: String,
     age: u32,
@@ -39,12 +47,12 @@ impl Agent {
 
     // Get the name of the person
     fn get_name(&self) -> &str {
-        todo!()
+        & self.name
     }
 
     // Get the age of the person
     fn get_age(&self) -> u32 {
-        todo!()
+        self.age
     }
 }
 
@@ -61,31 +69,32 @@ impl Calculator {
         Calculator { value: 0 }
     }
 
-    fn add(&self, num: i32) {
+    fn add(& mut self, num: i32) {
         self.value += num;
     }
 
-    fn subtract(mut self, num: i32) {
+    fn subtract(&mut self, num: i32) {
         self.value -= num;
     }
-    fn clear(self) {
+    fn clear(& mut self) {
         self.value = 0;
     }
 
-    fn get_value(self) -> i32 {
+    fn get_value(&self) -> i32 {
         self.value
     }
 }
 
 // Exercise 4
 // Make it compile
-#[derive(Debug)]
+#[derive(Debug, Clone)]
+#[allow(dead_code)]
 struct User {
     first: String,
     last: String,
     age: u32,
 }
-
+#[allow(dead_code)]
 fn exercise4() {
     let u1 = User {
         first: String::from("John"),
@@ -93,9 +102,9 @@ fn exercise4() {
         age: 22,
     };
 
-    let u2 = User {
+    let _u2 = User {
         first: String::from("Mary"),
-        ..u1
+        ..u1.clone()
         
     };
 
@@ -105,11 +114,13 @@ fn exercise4() {
 
 // Exercise 5
 // Make it compile
+#[allow(dead_code)]
 struct Foo {
     str_val: String,
     int_val: i32,
 }
 
+#[allow(unused_variables, dead_code)]
 fn exercise5() {
     let mut foos = Vec::new();
     foos.push(Foo {
@@ -122,10 +133,10 @@ fn exercise5() {
     });
 
     
-    let moved = foos[0];
+    let moved = &foos[0];
 
     
-    let moved_field = foos[0].str_val;
+    let moved_field = &foos[0].str_val;
 }
 
 // Exercise 6
@@ -133,7 +144,7 @@ fn exercise5() {
 // defined the Package struct and we want to test some logic attached to it.
 // Make the code compile and the tests pass!
 
-#[derive(Debug)]
+#[allow(dead_code)]
 struct Package {
     sender_country: String,
     recipient_country: String,
@@ -153,12 +164,17 @@ impl Package {
         }
     }
 
-    fn is_international(&self) -> ??? {
-        // Something goes here...
+    fn is_international(&self) -> bool {
+        if self.sender_country != self.recipient_country{
+            true
+        }
+        else{
+            false
+        }
     }
 
-    fn get_fees(&self, cents_per_gram: i32) -> ??? {
-        // Something goes here...
+    fn get_fees(&self, cents_per_gram: i32) -> i32 {
+        self.weight_in_grams * cents_per_gram
     }
 }
 
