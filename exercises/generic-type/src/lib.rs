@@ -1,9 +1,14 @@
 // Exercise 1 
 // Implement struct Point to make it work.
 // Make it compile
+struct Position<T, U>{
+    x: T,
+    y: U,
+}
+
 fn exercise1() {
-    let integer = Position { x: 5, y: 10 };
-    let float = Position { x: 1.0, y: 4.0 };
+    let integer: Position<i32, i32> = Position { x: 5, y: 10 };
+    let float: Position<f64, f64> = Position { x: 1.0, y: 4.0 };
 }
 
 
@@ -13,7 +18,7 @@ fn exercise1() {
 // Make it compile
 struct Point<T> {
     x: T,
-    y: T,
+    y: String,
 }
 
 fn exercise2() {
@@ -26,12 +31,12 @@ fn exercise2() {
 // Exercise 3
 // Make it compile
 // Add generic for Val to make the code work, DON'T modify the code in `main`.
-struct Val {
-    val: f64,
+struct Val<T> {
+    val: T,
 }
 
-impl Val {
-    fn value(&self) -> &f64 {
+impl<T: PartialEq> Val<T> {
+    fn value(&self) -> &T {
         &self.val
     }
 }
@@ -49,23 +54,46 @@ fn exercise3() {
 // Implementing logic
 // Run tests
 
-fn find_max<T>(collection: &[T]) -> Option<&T> {
-    todo!()
+fn find_max<T: PartialOrd>(collection: &[T]) -> Option<&T> {
+    if collection.is_empty(){
+        return  Option::from(None);
+    }
+    let mut result: &T = &collection[0];
+    for x in collection.iter(){
+        if x > result{
+            result = x;
+        }
+    }
+    Option::from(result)
 }
 
 // Exercise 5 
 // Reverse the elements in a collection
 // Make it compile 
 // Run tests 
-fn reverse_collection<T>(collection: &[T]) {
-    todo!()
+fn reverse_collection<T: Copy>(collection: & mut[T]) {
+    if collection.is_empty(){
+        return;
+    }
+    let len = collection.len();
+    for x in 0..len/2{
+        let tmp = collection[x];
+        collection[x] = collection[len - 1 - x];
+        collection[len - 1 - x] = tmp;
+    }
 }
 
 
 // Exercise 6
 // Function to check if a collection contains a specific value
-fn contains_value<T>(collection: &[T], value: &T) -> bool {
-    todo!()
+
+fn contains_value<T: PartialEq>(collection: &[T], value: &T) -> bool {
+    for x in collection.iter(){
+        if x == value{
+            return true;
+        }
+    }
+    false
 }
 
 // Unit tests
