@@ -13,10 +13,19 @@ trait Hello {
 //TODO 
 struct Student {}
 impl Hello for Student {
+    fn say_something(&self) -> String {
+        String::from("I'm a good student")
+    }
 }
 //TODO
 struct Teacher {}
 impl Hello for Teacher {
+    fn say_something(&self) -> String {
+        String::from("I'm not a bad teacher")
+    }
+    fn say_hi(&self) -> String {
+        String::from("Hi, I'm your new teacher")
+    }
 }
 
 
@@ -24,6 +33,7 @@ impl Hello for Teacher {
 // Make it compile in unit test for exercise 2
 // Hint: use #[derive]  for struct Point 
 // Run tests
+#[derive(Debug, PartialEq)]
 struct Point {
     x: i32,
     y: i32,
@@ -35,7 +45,9 @@ struct Point {
 // Implement `fn sum` with trait bound in two ways.
 // Run tests
 // Hint: Trait Bound
-fn sum<T>(x: T, y: T) -> T {
+use std::ops::*;
+
+fn sum<T:Add<Output = T>>(x: T, y: T) -> T {
     x + y
 }
 
@@ -55,15 +67,24 @@ impl Foo for u8 {
 impl Foo for String {
     fn method(&self) -> String { format!("string: {}", *self) }
 }
-
 // IMPLEMENT below with generics and parameters
-fn static_dispatch(x) {
-    todo!()
+
+fn static_dispatch <T>(x: T) where T: std::fmt::Debug{
+    println!("{:?} ", x);
+}
+trait DynamicDispatch {
+    fn dynamic_dispatch(&self);
+}
+
+impl DynamicDispatch for String {
+    fn dynamic_dispatch(&self) {
+        println!("Dynamic dispatch: {:?}", self);
+    }
 }
 
 // Implement below with trait objects and parameters
-fn dynamic_dispatch(x) {
-    todo!()
+fn dynamic_dispatch(x: &dyn DynamicDispatch) {
+    x.dynamic_dispatch();
 }
 
 // Exercise 5 
@@ -90,7 +111,7 @@ fn draw_with_box(x: Box<dyn Draw>) {
     x.draw();
 }
 
-fn draw_with_ref(x: __) {
+fn draw_with_ref(x: &u8) {
     x.draw();
 }
 
@@ -111,7 +132,21 @@ struct Stack {
 }
 
 //TODO implement Container for Stack
+impl Container for Stack {
+    type Item = u8;
+    fn insert(&mut self, item: Self::Item){
+        self.items.push(item);
 
+    }
+    fn remove(&mut self) -> Option<Self::Item>{
+        self.items.pop()
+    }
+    fn is_empty(&self) -> bool{
+        self.items.is_empty()
+    }
+
+
+}
 
 
 #[cfg(test)]
@@ -161,7 +196,7 @@ mod tests {
         let y = 8u8;
     
         // Draw x.
-        draw_with_box(__);
+        draw_with_box(Box::new(x));
     
         // Draw y.
         draw_with_ref(&y);
@@ -169,7 +204,7 @@ mod tests {
 
     #[test]
     fn exercise6_should_work(){
-        let mut stack: Stack<u8> = Stack { items: Vec::new() };
+        let mut stack: Stack = Stack { items: Vec::new() };
         assert!(stack.is_empty());
         stack.insert(1);
         stack.insert(2);
